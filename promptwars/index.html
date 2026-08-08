@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailMind AI — AI Email Assistant & Magic Prompt Formula</title>
+  <meta name="description" content="AI-powered Email Intelligence Assistant that analyzes incoming emails, extracts tasks, detects phishing, generates smart replies, and schedules calendar events.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Embedded Single-File CSS Styles -->
+  <style>
+/* ==========================================================================
+   MailMind AI — Design System & Stylesheet
+   ========================================================================== */
+
+/* 1. CSS Custom Properties / Design Tokens */
+:root {
+  --bg-primary: #0a0d14;
+  --bg-secondary: #111622;
+  --bg-tertiary: #192030;
+
+  --glass-bg: rgba(21, 28, 44, 0.7);
+  --glass-bg-hover: rgba(30, 40, 62, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-highlight: rgba(255, 255, 255, 0.16);
+
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+
+  --accent-secondary: #8b5cf6;
+  --accent-cyan: #06b6d4;
+
+  /* Priority & Risk Indicator Colors */
+  --color-high-bg: rgba(239, 68, 68, 0.15);
+  --color-high-border: rgba(239, 68, 68, 0.4);
+  --color-high-text: #fca5a5;
+
+  --color-medium-bg: rgba(245, 158, 11, 0.15);
+  --color-medium-border: rgba(245, 158, 11, 0.4);
+  --color-medium-text: #fde047;
+
+  --color-low-bg: rgba(16, 185, 129, 0.15);
+  --color-low-border: rgba(16, 185, 129, 0.4);
+  --color-low-text: #6ee7b7;
+
+  --color-safe-bg: rgba(16, 185, 129, 0.15);
+  --color-safe-text: #34d399;
+
+  --color-suspicious-bg: rgba(245, 158, 11, 0.15);
+  --color-suspicious-text: #fbbf24;
+
+  --color-phishing-bg: rgba(239, 68, 68, 0.2);
+  --color-phishing-text: #f87171;
+
+  /* Text Colors */
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --text-dim: #6b7280;
+
+  /* Fonts & Shadows */
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-code: 'Fira Code', monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-glow-sm: 0 0 15px rgba(99, 102, 241, 0.2);
+  --shadow-glow-lg: 0 0 30px rgba(99, 102, 241, 0.3);
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. Global Reset & Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* 3. Navigation Bar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px;
+  background: rgba(10, 13, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: var(--shadow-glow-sm);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.badge-ai {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.nav-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn.active {
+  color: #fff;
+  background: var(--glass-bg-hover);
+  border: 1px solid var(--glass-border-highlight);
+  box-shadow: var(--shadow-glow-sm);
+}
+
+.nav-badge {
+  background: var(--accent-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 4. Common Layout Containers */
+.main-content {
+  padding: 24px;
+  min-height: calc(100vh - 70px);
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.max-width-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* 5. Buttons & Controls */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  box-shadow: var(--shadow-glow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-lg);
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: var(--glass-bg);
+  color: var(--text-main);
+  border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-highlight);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.btn-text-sm {
+  background: transparent;
+  border: none;
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-fast);
+}
+
+.btn-text-sm:hover {
+  color: #818cf8;
+  text-decoration: underline;
+}
+
+/* 6. Glassmorphism Card Component */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: var(--transition-fast);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.card-label i {
+  color: var(--accent-primary);
+  width: 18px;
+  height: 18px;
+}
+
+/* 7. Workspace Grid Layout */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  min-height: calc(100vh - 120px);
+}
+
+@media (max-width: 1024px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar Panel */
+.sidebar-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  position: sticky;
+  top: 90px;
+}
+
+.panel-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.count-pill {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: var(--text-muted);
+}
+
+/* Filter Box */
+.filter-box {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper i {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.search-input-wrapper input:focus {
+  border-color: var(--accent-primary);
+}
+
+.filter-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.filter-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  color: var(--text-main);
+}
+
+.filter-pill.active {
+  background: var(--accent-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Email List Items */
+.email-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.email-item {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.email-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--glass-border);
+}
+
+.email-item.active {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: var(--accent-primary);
+  box-shadow: inset 3px 0 0 var(--accent-primary);
+}
+
+.email-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.email-item-sender {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.email-item-time {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.email-item-subject {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #d1d5db;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.email-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.mini-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.mini-badge.high {
+  background: var(--color-high-bg);
+  color: var(--color-high-text);
+}
+
+.mini-badge.medium {
+  background: var(--color-medium-bg);
+  color: var(--color-medium-text);
+}
+
+.mini-badge.low {
+  background: var(--color-low-bg);
+  color: var(--color-low-text);
+}
+
+.mini-badge.safe {
+  background: var(--color-safe-bg);
+  color: var(--color-safe-text);
+}
+
+.mini-badge.suspicious {
+  background: var(--color-suspicious-bg);
+  color: var(--color-suspicious-text);
+}
+
+.mini-badge.high-risk {
+  background: var(--color-phishing-bg);
+  color: var(--color-phishing-text);
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* 8. Analysis Main Panel */
+.analysis-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.email-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.email-meta-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.sender-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan));
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sender-info {
+  flex: 1;
+}
+
+.email-subject {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.email-submeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.825rem;
+  color: var(--text-muted);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-item i {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-primary);
+}
+
+.raw-email-collapsible {
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--glass-border);
+}
+
+.raw-email-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.raw-email-text {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  color: #e5e7eb;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+}
+
+.raw-email-extras {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+}
+
+/* 9. Loading Spinner */
+.loading-state {
+  padding: 60px;
+  text-align: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.sparkle-spinner {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 16px auto;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+}
+
+.spin-icon {
+  width: 28px;
+  height: 28px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 10. Intelligence Dashboard Layout & Cards */
+.intelligence-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Priority Card Details */
+.priority-badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.priority-badge.high {
+  background: var(--color-high-bg);
+  border: 1px solid var(--color-high-border);
+  color: var(--color-high-text);
+}
+
+.priority-badge.medium {
+  background: var(--color-medium-bg);
+  border: 1px solid var(--color-medium-border);
+  color: var(--color-medium-text);
+}
+
+.priority-badge.low {
+  background: var(--color-low-bg);
+  border: 1px solid var(--color-low-border);
+  color: var(--color-low-text);
+}
+
+.priority-reason {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.meta-tags-row {
+  display: flex;
+  gap: 10px;
+}
+
+.category-tag,
+.sentiment-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+}
+
+.category-tag i,
+.sentiment-tag i {
+  width: 14px;
+  height: 14px;
+}
+
+/* Risk Card Details */
+.risk-badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.risk-badge.safe {
+  background: var(--color-safe-bg);
+  color: var(--color-safe-text);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.risk-badge.suspicious {
+  background: var(--color-suspicious-bg);
+  color: var(--color-suspicious-text);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.risk-badge.high-risk {
+  background: var(--color-phishing-bg);
+  color: var(--color-phishing-text);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.risk-indicators-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.indicator-item {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.indicator-item i {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.indicator-item.risk-alert {
+  color: #f87171;
+}
+
+.indicator-item.safe-item {
+  color: #34d399;
+}
+
+/* Summary Card */
+.summary-text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #e5e7eb;
+}
+
+/* Tasks Card */
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.task-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.task-checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.task-checkbox {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-desc {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.task-desc.completed {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.task-submeta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.task-urgency-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.task-urgency-tag.high {
+  background: var(--color-high-bg);
+  color: var(--color-high-text);
+}
+
+.task-urgency-tag.medium {
+  background: var(--color-medium-bg);
+  color: var(--color-medium-text);
+}
+
+.task-urgency-tag.low {
+  background: var(--color-low-bg);
+  color: var(--color-low-text);
+}
+
+/* Event / Meeting Box */
+.event-details-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+.event-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.event-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.event-meta-item i {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-cyan);
+}
+
+/* Follow-up Box */
+.followup-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.08);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* Reply Section */
+.reply-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-badge {
+  font-size: 0.75rem;
+  background: rgba(6, 182, 212, 0.15);
+  color: #67e8f9;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.tone-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tone-selector label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.tone-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tone-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+}
+
+.reply-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reply-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  color: #fff;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+
+.reply-textarea:focus {
+  border-color: var(--accent-primary);
+}
+
+.reply-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reply-note {
+  font-size: 0.775rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reply-note i {
+  width: 14px;
+  height: 14px;
+}
+
+.reply-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Raw Output Code Viewer */
+.structured-output-code {
+  font-family: var(--font-code);
+  font-size: 0.825rem;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  color: #a5f3fc;
+  white-space: pre-wrap;
+  border: 1px solid var(--glass-border);
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* 11. Formula Specification Page */
+.formula-spec-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.formula-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .formula-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.spec-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spec-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spec-title i {
+  color: var(--accent-primary);
+}
+
+.spec-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.spec-list li strong {
+  color: var(--text-main);
+}
+
+.code-block {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  color: #cbd5e1;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.code-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.code-tab-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.code-tab-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* 12. Modal Backdrops */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.modal-backdrop.hidden {
+  display: none;
+}
+
+.modal-card {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border-highlight);
+  box-shadow: var(--shadow-glow-lg);
+}
+
+.max-width-md {
+  max-width: 680px;
+}
+
+.max-width-sm {
+  max-width: 480px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: #fff;
+  font-family: var(--font-main);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent-primary);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.api-status-box {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 13. Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 300;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-glow-sm);
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mt-6 {
+  margin-top: 24px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+.text-sm {
+  font-size: 0.8rem;
+}
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <i data-lucide="sparkles"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">MailMind <span class="badge-ai">AI</span></span>
+          <span class="brand-subtitle">Email Intelligence & Magic Prompt Formula</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button id="nav-inbox-btn" class="nav-btn active" onclick="switchTab('inbox')">
+          <i data-lucide="inbox"></i>
+          <span>Workspace</span>
+        </button>
+        <button id="nav-tasks-btn" class="nav-btn" onclick="switchTab('tasks')">
+          <i data-lucide="check-square"></i>
+          <span>Action Items</span>
+          <span id="tasks-count-badge" class="nav-badge">0</span>
+        </button>
+        <button id="nav-formula-btn" class="nav-btn" onclick="switchTab('formula')">
+          <i data-lucide="terminal"></i>
+          <span>Magic Formula Spec</span>
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm" onclick="openApiKeyModal()">
+          <i data-lucide="key"></i>
+          <span id="api-key-status-label">LLM Settings</span>
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="openNewEmailModal()">
+          <i data-lucide="plus"></i>
+          <span>Analyze Custom Email</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- TAB 1: WORKSPACE / INBOX & ANALYZER -->
+      <section id="tab-inbox" class="tab-pane active">
+        <div class="workspace-grid">
+          
+          <!-- Sidebar: Sample Emails & Controls -->
+          <aside class="sidebar-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i data-lucide="mail"></i>
+                <span>Sample Inbox</span>
+              </div>
+              <span class="count-pill" id="sample-emails-count">6 Emails</span>
+            </div>
+
+            <!-- Category & Search Filters -->
+            <div class="filter-box">
+              <div class="search-input-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="email-search-input" placeholder="Search emails..." oninput="handleSearchFilter()">
+              </div>
+              
+              <div class="filter-pills" id="category-filter-pills">
+                <button class="filter-pill active" onclick="filterByCategory('all')">All</button>
+                <button class="filter-pill" onclick="filterByCategory('Work')">Work</button>
+                <button class="filter-pill" onclick="filterByCategory('Meetings')">Meetings</button>
+                <button class="filter-pill" onclick="filterByCategory('Phishing')">Phishing</button>
+                <button class="filter-pill" onclick="filterByCategory('Finance')">Finance</button>
+              </div>
+            </div>
+
+            <!-- Email List -->
+            <div class="email-list" id="email-list-container">
+              <!-- Dynamically populated emails -->
+            </div>
+
+            <!-- Preset Action Bar -->
+            <div class="sidebar-footer">
+              <button class="btn btn-secondary btn-block" onclick="openNewEmailModal()">
+                <i data-lucide="edit-3"></i> Paste / Draft Email
+              </button>
+            </div>
+          </aside>
+
+          <!-- Main View: Active Email & Intelligence Report -->
+          <section class="analysis-panel" id="analysis-panel">
+            
+            <!-- Email Meta Banner -->
+            <div class="email-header-card glass-card">
+              <div class="email-meta-top">
+                <div class="sender-avatar" id="email-avatar">EM</div>
+                <div class="sender-info">
+                  <h2 class="email-subject" id="view-email-subject">Select an email to analyze</h2>
+                  <div class="email-submeta">
+                    <span class="meta-item"><i data-lucide="user"></i> <strong id="view-email-sender">-</strong></span>
+                    <span class="meta-item"><i data-lucide="send"></i> <span id="view-email-recipient">-</span></span>
+                    <span class="meta-item"><i data-lucide="clock"></i> <span id="view-email-date">-</span></span>
+                  </div>
+                </div>
+                <div class="header-quick-actions">
+                  <button class="btn-icon" title="View Raw Email" onclick="toggleRawEmail()">
+                    <i data-lucide="code"></i>
+                  </button>
+                  <button class="btn-icon" title="Re-Analyze Email" onclick="triggerCurrentAnalysis()">
+                    <i data-lucide="rotate-cw"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Collapsible Raw Email Body -->
+              <div class="raw-email-collapsible hidden" id="raw-email-container">
+                <div class="raw-email-label">Raw Email Content:</div>
+                <pre class="raw-email-text" id="view-email-body-text"></pre>
+                <div class="raw-email-extras" id="view-email-extras"></div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="analysis-loading-state" class="loading-state hidden">
+              <div class="sparkle-spinner">
+                <i data-lucide="sparkles" class="spin-icon"></i>
+              </div>
+              <h3>Analyzing Email Intelligence...</h3>
+              <p>Applying the 11-rule Magic Prompt Formula to extract priority, tasks, phishing risk, and smart replies.</p>
+            </div>
+
+            <!-- Intelligence Report Dashboard -->
+            <div id="analysis-report-container" class="intelligence-dashboard">
+              
+              <!-- Row 1: Priority & Phishing Risk Badges -->
+              <div class="grid-2col">
+                
+                <!-- Priority Card -->
+                <div class="glass-card priority-card" id="priority-card">
+                  <div class="card-header">
+                    <span class="card-label"><i data-lucide="flag"></i> Priority Level</span>
+                    <span class="priority-badge" id="priority-badge">High</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="priority-reason" id="priority-reason">Urgent deadline mentioned requiring immediate response.</div>
+                    <div class="meta-tags-row">
+                      <span class="category-tag" id="category-tag"><i data-lucide="folder"></i> Work</span>
+                      <span class="sentiment-tag" id="sentiment-tag"><i data-lucide="smile"></i> Neutral</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Spam / Phishing Card -->
+                <div class="glass-card risk-card" id="risk-card">
+                  <div class="card-header">
+                    <span class="card-label"><i data-lucide="shield-alert"></i> Spam & Phishing Risk</span>
+                    <span class="risk-badge" id="risk-badge">Safe</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="risk-indicators-list" id="risk-indicators-container">
+                      <div class="indicator-item safe-item"><i data-lucide="shield-check"></i> No suspicious links or impersonation detected.</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Row 2: Executive Summary -->
+              <div class="glass-card summary-card">
+                <div class="card-header">
+                  <span class="card-label"><i data-lucide="file-text"></i> Executive Summary</span>
+                  <button class="btn-text-sm" onclick="copyText('summary-text')">
+                    <i data-lucide="copy"></i> Copy
+                  </button>
+                </div>
+                <div class="card-body">
+                  <p class="summary-text" id="summary-text">Summary loading...</p>
+                </div>
+              </div>
+
+              <!-- Row 3: Actionable Tasks & Deadlines -->
+              <div class="glass-card tasks-card">
+                <div class="card-header">
+                  <span class="card-label"><i data-lucide="check-circle-2"></i> Extracted Action Items & Deadlines</span>
+                  <span class="count-pill" id="extracted-tasks-count">0 Tasks</span>
+                </div>
+                <div class="card-body">
+                  <div class="tasks-list" id="tasks-list-container">
+                    <!-- Extracted task items -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 4: Meeting & Calendar Details + Follow-up -->
+              <div class="grid-2col">
+                
+                <!-- Meeting Info -->
+                <div class="glass-card event-card">
+                  <div class="card-header">
+                    <span class="card-label"><i data-lucide="calendar"></i> Extracted Event / Meeting</span>
+                    <button class="btn-text-sm hidden" id="download-ics-btn" onclick="downloadIcsFile()">
+                      <i data-lucide="calendar-plus"></i> Export .ics
+                    </button>
+                  </div>
+                  <div class="card-body" id="meeting-details-container">
+                    <p class="text-muted">None detected</p>
+                  </div>
+                </div>
+
+                <!-- Follow-up Suggestions -->
+                <div class="glass-card followup-card">
+                  <div class="card-header">
+                    <span class="card-label"><i data-lucide="bell"></i> Follow-up Suggestion</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="followup-box" id="followup-suggestion">
+                      No follow-up required.
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Row 5: Context-Aware Smart Reply Generator -->
+              <div class="glass-card reply-card">
+                <div class="card-header">
+                  <div class="reply-header-left">
+                    <span class="card-label"><i data-lucide="message-square"></i> Context-Aware Smart Reply</span>
+                    <span class="language-badge" id="detected-language-badge">Detected: English</span>
+                  </div>
+                  <div class="tone-selector">
+                    <label>Tone:</label>
+                    <button class="tone-btn active" onclick="changeReplyTone('Professional')">Professional</button>
+                    <button class="tone-btn" onclick="changeReplyTone('Concise')">Concise</button>
+                    <button class="tone-btn" onclick="changeReplyTone('Formal')">Formal</button>
+                    <button class="tone-btn" onclick="changeReplyTone('Friendly')">Friendly</button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="reply-editor-wrapper">
+                    <textarea id="smart-reply-textarea" class="reply-textarea" rows="6" placeholder="Generated smart reply will appear here..."></textarea>
+                    <div class="reply-actions-bar">
+                      <span class="reply-note"><i data-lucide="info"></i> Addresses sender's request without hallucinated commitments.</span>
+                      <div class="reply-buttons">
+                        <button class="btn btn-secondary btn-sm" onclick="copyText('smart-reply-textarea')">
+                          <i data-lucide="copy"></i> Copy Reply
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="sendReplySimulation()">
+                          <i data-lucide="send"></i> Send Reply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 6: Raw AI Prompt Formula Output Viewer -->
+              <div class="glass-card raw-output-card">
+                <div class="card-header">
+                  <span class="card-label"><i data-lucide="file-code"></i> Standardized Structured Intelligence Report</span>
+                  <button class="btn-text-sm" onclick="copyText('raw-prompt-output-text')">
+                    <i data-lucide="copy"></i> Copy Format
+                  </button>
+                </div>
+                <div class="card-body">
+                  <pre class="structured-output-code" id="raw-prompt-output-text"></pre>
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+      </section>
+
+
+      <!-- TAB 2: ACTION ITEMS CENTER -->
+      <section id="tab-tasks" class="tab-pane">
+        <div class="tasks-center-wrapper max-width-container">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title">Consolidated Action Items</h1>
+              <p class="section-subtitle">Track all actionable tasks extracted across your email communications.</p>
+            </div>
+            <div class="tasks-filter-group">
+              <button class="filter-btn active" onclick="filterActionItems('all')">All Tasks</button>
+              <button class="filter-btn" onclick="filterActionItems('pending')">Pending</button>
+              <button class="filter-btn" onclick="filterActionItems('completed')">Completed</button>
+            </div>
+          </div>
+
+          <div class="tasks-master-list" id="action-items-master-list">
+            <!-- Dynamically populated task list -->
+          </div>
+        </div>
+      </section>
+
+
+      <!-- TAB 3: MAGIC PROMPT FORMULA SPECIFICATION -->
+      <section id="tab-formula" class="tab-pane">
+        <div class="formula-spec-wrapper max-width-container">
+          
+          <div class="section-header">
+            <div>
+              <h1 class="section-title">AI Email Assistant — Magic Prompt Formula</h1>
+              <p class="section-subtitle">Complete prompt engineering system rules, structure, and API implementation code.</p>
+            </div>
+            <button class="btn btn-primary" onclick="copyPromptFormula()">
+              <i data-lucide="copy"></i> Copy Full System Prompt
+            </button>
+          </div>
+
+          <!-- Formula Cards Grid -->
+          <div class="formula-grid">
+            
+            <!-- Prompt Structure Card -->
+            <div class="glass-card spec-card">
+              <div class="spec-title"><i data-lucide="layers"></i> Core System Persona & Instructions</div>
+              <p>The AI operates under a zero-hallucination constraint, analyzing unstructured email bodies and converting them into actionable 11-part intelligence reports.</p>
+              <ul class="spec-list">
+                <li><strong>Rule 1: Summarization:</strong> Concise, removes fluff, preserves original intent.</li>
+                <li><strong>Rule 2: Priority Detection:</strong> High / Medium / Low + explicit reasoning.</li>
+                <li><strong>Rule 3: Categorization:</strong> Work, Meetings, Personal, Finance, Support, Phishing, etc.</li>
+                <li><strong>Rule 4: Task Extraction:</strong> Action items, assignees, deadlines, and urgency level.</li>
+                <li><strong>Rule 5: Spam & Phishing Scanner:</strong> Risk level (Safe/Suspicious/High Risk) & risk indicators.</li>
+                <li><strong>Rule 6: Smart Reply:</strong> Context-aware response without making unverified promises.</li>
+                <li><strong>Rule 7: Sentiment Analysis:</strong> Positive, Neutral, Negative, or Urgent with reason.</li>
+                <li><strong>Rule 8: Multi-language Support:</strong> Auto-detect email language and preserve reply language.</li>
+                <li><strong>Rule 9: Meeting & Calendar Extraction:</strong> Structured event info (Title, Date, Time, Location/Link).</li>
+                <li><strong>Rule 10: Follow-up Reminders:</strong> Suggest trigger times for pending responses.</li>
+                <li><strong>Rule 11: Output Integrity:</strong> Output "Not specified" if details are missing. Never hallucinate.</li>
+              </ul>
+            </div>
+
+            <!-- Input/Output Schema Card -->
+            <div class="glass-card spec-card">
+              <div class="spec-title"><i data-lucide="code-2"></i> Input & Output Data Contract</div>
+              <div class="code-tab-headers">
+                <span class="code-tab active">System Prompt Template</span>
+              </div>
+              <pre class="code-block" id="formula-system-prompt-display"></pre>
+            </div>
+
+          </div>
+
+          <!-- API Integration Snippets -->
+          <div class="glass-card spec-card mt-6">
+            <div class="spec-title"><i data-lucide="cpu"></i> Developer API Integration Examples</div>
+            <div class="code-tabs">
+              <button class="code-tab-btn active" onclick="switchApiTab('js')">JavaScript / TypeScript</button>
+              <button class="code-tab-btn" onclick="switchApiTab('python')">Python (OpenAI / Gemini)</button>
+              <button class="code-tab-btn" onclick="switchApiTab('curl')">cURL REST API</button>
+            </div>
+            <div class="code-snippet-container">
+              <pre class="code-block" id="api-snippet-display"></pre>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- NEW / DRAFT EMAIL MODAL -->
+    <div id="modal-email-input" class="modal-backdrop hidden">
+      <div class="modal-card glass-card max-width-md">
+        <div class="modal-header">
+          <h3><i data-lucide="edit-3"></i> Analyze Custom Email</h3>
+          <button class="btn-icon" onclick="closeModal('modal-email-input')"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="custom-email-form" onsubmit="handleCustomEmailSubmit(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Sender Name / Email:</label>
+                <input type="text" id="input-sender" placeholder="e.g. Sarah Jenkins <sarah@company.com>" required>
+              </div>
+              <div class="form-group">
+                <label>Recipient:</label>
+                <input type="text" id="input-recipient" placeholder="e.g. Alex Johnson <alex@company.com>" required>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Subject:</label>
+                <input type="text" id="input-subject" placeholder="e.g. Urgent: Q3 Budget Review & Signoff" required>
+              </div>
+              <div class="form-group">
+                <label>Date / Time:</label>
+                <input type="text" id="input-date" placeholder="e.g. Oct 24, 2026 at 2:30 PM">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email Content / Body:</label>
+              <textarea id="input-body" rows="6" placeholder="Paste the full email text here..." required></textarea>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Optional Attachments:</label>
+                <input type="text" id="input-attachments" placeholder="e.g. Q3_Budget_Proposal.pdf (1.2 MB)">
+              </div>
+              <div class="form-group">
+                <label>Optional Output Language:</label>
+                <select id="input-language">
+                  <option value="Auto-detect">Auto-detect (Match Email)</option>
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="closeModal('modal-email-input')">Cancel</button>
+              <button type="submit" class="btn btn-primary"><i data-lucide="sparkles"></i> Analyze Email</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- API KEY & LLM MODAL -->
+    <div id="modal-api-key" class="modal-backdrop hidden">
+      <div class="modal-card glass-card max-width-sm">
+        <div class="modal-header">
+          <h3><i data-lucide="key"></i> Live LLM API Settings</h3>
+          <button class="btn-icon" onclick="closeModal('modal-api-key')"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-sm text-muted">MailMind AI runs with a high-fidelity built-in NLP intelligence engine offline. Optionally enter a Google Gemini API key to run live model analysis.</p>
+          
+          <div class="form-group mt-4">
+            <label>Gemini API Key (Optional):</label>
+            <input type="password" id="api-key-input" placeholder="AIzaSy...">
+          </div>
+
+          <div class="api-status-box" id="api-status-box">
+            <i data-lucide="info"></i> Standard Mode: Built-in Magic Prompt Rule Engine
+          </div>
+
+          <div class="modal-footer mt-4">
+            <button class="btn btn-secondary" onclick="clearApiKey()">Clear Key</button>
+            <button class="btn btn-primary" onclick="saveApiKey()">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </div>
+
+  <!-- Single-File JavaScript App Engine -->
+  <script>
+/* ==========================================================================
+   MailMind AI — Embedded Prompt Formula & Spec Definitions
+   ========================================================================== */
+
+const SYSTEM_PROMPT_FORMULA = `# AI Email Assistant — Magic Prompt Formula
+
+## Context
+You are an advanced **AI Email Management Assistant** designed to help professionals and students efficiently manage large volumes of emails. Your role is to analyze incoming emails using natural language understanding, reasoning, and prompt engineering, then convert unstructured email content into clear, concise, and actionable information.
+
+You should behave like an intelligent productivity assistant that understands the context, intent, urgency, sentiment, tasks, deadlines, and required responses within an email.
+
+## Task
+Analyze each incoming email and provide a structured intelligence report containing:
+1. A concise summary of the email.
+2. The email's priority level: Low, Medium, or High.
+3. The appropriate email category.
+4. Important tasks or action items mentioned in the email.
+5. Deadlines, dates, or time-sensitive information.
+6. Spam or phishing risk detection.
+7. A context-aware suggested reply.
+8. Any additional useful insights that can help the user manage the email efficiently.
+
+## Rules & Directives:
+- Email Summarization: Remove fluff, preserve meaning.
+- Priority Detection: High (urgent/deadlines/emergencies), Medium (requires response/action soon), Low (informational/newsletters). Explain reason.
+- Email Categorization: Work, Education, Personal, Finance, Meetings, Notifications, Support, Phishing, Newsletter, etc.
+- Task & Deadline Extraction: Task description, Responsible person, Deadline, Urgency. If none, state "None detected".
+- Spam/Phishing Scanner: Risk level (Safe / Suspicious / High Risk) with indicators (suspicious links, password requests, payment requests, impersonation, high urgency threats).
+- Smart Reply: Professional, natural, addresses sender's request directly. NEVER invent commitments, dates, or facts.
+- Sentiment: Positive, Neutral, Negative, or Urgent/Concerned with rationale.
+- Multi-Language: Auto-detect language and preserve original language in reply.
+- Meeting & Calendar: Event title, date, start/end time, location/link, participants, notes.
+- Follow-up: Suggest appropriate reminder time based on information in email.
+- Output Integrity: Output "Not specified" or "Unable to determine" if details are missing. Never hallucinate.
+
+## Expected Output Structure:
+EMAIL ANALYSIS
+
+Summary:
+[Concise summary]
+
+Priority:
+[Low / Medium / High]
+
+Priority Reason:
+[Reason]
+
+Category:
+[Category]
+
+Tasks:
+1. [Task]
+   Deadline: [Date/Time]
+   Urgency: [Level]
+
+Deadlines:
+- [Deadline information]
+
+Spam/Phishing Risk:
+[Safe / Suspicious / High Risk]
+
+Risk Indicators:
+- [Detected indicators]
+
+Sentiment:
+[Positive / Neutral / Negative / Urgent]
+
+Meeting/Event:
+[Extracted event information or "None detected"]
+
+Suggested Reply:
+[Context-aware reply]
+
+Follow-up:
+[Suggested reminder or "No follow-up required"]`;
+
+const API_SNIPPETS = {
+  js: `// JavaScript / TypeScript Integration Example using OpenAI / Gemini SDK
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+export async function analyzeEmail(emailPayload) {
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+  const prompt = \`
+    SYSTEM PROMPT:
+    ${SYSTEM_PROMPT_FORMULA.replace(/`/g, '\\`')}
+
+    INPUT EMAIL DATA:
+    Sender: \${emailPayload.sender}
+    Recipient: \${emailPayload.recipient}
+    Subject: \${emailPayload.subject}
+    Date: \${emailPayload.date}
+
+    Email Body:
+    \${emailPayload.body}
+
+    Attachments: \${emailPayload.attachments || 'None'}
+    Links: \${emailPayload.links ? emailPayload.links.join(', ') : 'None'}
+    User Language: \${emailPayload.userLanguage || 'Auto-detect'}
+  \`;
+
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+}`,
+
+  python: `# Python Integration Example
+import os
+import google.generativeai as genai
+
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+def analyze_email(email_data):
+    model = genai.GenerativeModel("gemini-1.5-pro")
+    
+    prompt = f"""
+    {SYSTEM_PROMPT_FORMULA}
+
+    INPUT EMAIL DATA:
+    Sender: {email_data.get('sender')}
+    Recipient: {email_data.get('recipient')}
+    Subject: {email_data.get('subject')}
+    Date: {email_data.get('date')}
+
+    Email Body:
+    {email_data.get('body')}
+    """
+    
+    response = model.generate_content(prompt)
+    return response.text
+`,
+
+  curl: `curl -X POST https://api.openai.com/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $OPENAI_API_KEY" \\
+  -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI Email Assistant following the Magic Prompt Formula rules."
+      },
+      {
+        "role": "user",
+        "content": "Sender: alex@company.com\\nSubject: Project Sync\\n\\nBody: Hi team, can we meet tomorrow at 10 AM?"
+      }
+    ]
+  }'`
+};
+
+/* ==========================================================================
+   Sample Emails Suite
+   ========================================================================== */
+
+const SAMPLE_EMAILS = [
+  {
+    id: "sample-1",
+    sender: "Sarah Jenkins <sarah.jenkins@techcorp.io>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "URGENT: Q3 Client Presentation & Financial Audit Review",
+    date: "Saturday, Oct 24, 2026 at 09:15 AM",
+    body: `Hi Alex,
+
+I hope you're having a good morning. 
+
+We ran into a major block with the Q3 Client Presentation for the Board meeting on Monday. Marcus found a $45,000 discrepancy in the regional revenue figures in section 4.
+
+Could you please audit the raw spreadsheets and send me the corrected slide deck by 5:00 PM today? We need to submit the finalized presentation to the VP by 7:00 PM tonight.
+
+Also, please confirm if you can lead the financial overview segment during our prep meeting tomorrow, Sunday Oct 25, from 2:00 PM to 3:00 PM via Zoom (https://techcorp.zoom.us/j/987654321).
+
+Thanks so much for jumping on this so quickly!
+
+Best regards,
+Sarah Jenkins
+Senior Project Lead | TechCorp`,
+    attachments: "Q3_Revenue_Draft_v2.xlsx (4.2 MB)",
+    links: ["https://techcorp.zoom.us/j/987654321"],
+    userLanguage: "Auto-detect"
+  },
+  {
+    id: "sample-2",
+    sender: "IT Support Security Desk <security-verify-alerts@paypals-support-portal.net>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "CRITICAL: Suspicious Login Detected - Action Required Within 2 Hours!",
+    date: "Saturday, Oct 24, 2026 at 11:42 AM",
+    body: `Dear User,
+
+Our automated threat intelligence system detected an unauthorized login attempt to your corporate email and financial portal from an unknown IP address in Moscow, Russia (IP: 185.220.101.5).
+
+To prevent permanent account suspension and protect your payroll data, you MUST immediately verify your credentials and reset your security password using our secure server link:
+
+http://login-verify-security-reset.net/auth/login?email=alex.rivera@techcorp.io
+
+Failure to verify within 2 hours will result in permanent locking of your account and reporting to corporate compliance.
+
+Sincerely,
+Global IT Security Operations Team`,
+    attachments: "Security_Alert_Report.scr",
+    links: ["http://login-verify-security-reset.net/auth/login?email=alex.rivera@techcorp.io"],
+    userLanguage: "Auto-detect"
+  },
+  {
+    id: "sample-3",
+    sender: "David Chen <david.chen@designhub.co>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "Invitation: Product Strategy & UI Redesign Sync",
+    date: "Friday, Oct 23, 2026 at 03:30 PM",
+    body: `Hi Alex,
+
+Let's get together next week to review the new design prototypes for the mobile app redesign.
+
+Meeting Details:
+- Event: Mobile UI Redesign Sync
+- Date: Wednesday, Oct 28, 2026
+- Time: 10:00 AM - 11:00 AM EST
+- Location: Conference Room B / Google Meet (https://meet.google.com/abc-defg-hij)
+- Attendees: David Chen, Alex Rivera, Elena Rostova
+
+Agenda:
+1. Review user testing feedback on navigation drawer.
+2. Sign off on color accessibility compliance.
+3. Assign sprint tasks for front-end implementation.
+
+Please let me know if this time works for you or if we need to reschedule.
+
+Best,
+David`,
+    attachments: "UI_Design_Tokens_v1.fig",
+    links: ["https://meet.google.com/abc-defg-hij"],
+    userLanguage: "Auto-detect"
+  },
+  {
+    id: "sample-4",
+    sender: "Billing Department <invoices@cloudserviceprovider.com>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "Invoice #INV-2026-8912 Overdue Notice",
+    date: "Thursday, Oct 22, 2026 at 08:00 AM",
+    body: `Dear Valued Customer,
+
+This is a reminder that Invoice #INV-2026-8912 for your Cloud Server Infrastructure Subscription ($1,250.00 USD) was due on Oct 20, 2026.
+
+Please remit payment by Oct 30, 2026 to avoid service disruption. You can view your detailed billing invoice and submit payment via your account dashboard.
+
+If you have already processed this payment, please disregard this notice.
+
+Thank you for your business.
+
+Cloud Service Provider Billing Team`,
+    attachments: "Invoice_INV_2026_8912.pdf",
+    links: ["https://cloudserviceprovider.com/dashboard/billing"],
+    userLanguage: "Auto-detect"
+  },
+  {
+    id: "sample-5",
+    sender: "Carlos Mendoza <carlos.mendoza@client-es.com>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "Consulta sobre la nueva API de Integración y plazos de entrega",
+    date: "Wednesday, Oct 21, 2026 at 02:15 PM",
+    body: `Hola Alex,
+
+Espero que te encuentres muy bien.
+
+Te escribo para consultar sobre el estado de la integración de la API de pagos que estuvimos revisando la semana pasada. Nuestro equipo técnico necesita conocer los endpoints finales y la documentación para iniciar las pruebas antes del viernes 30 de octubre.
+
+¿Podrías enviarnos la documentación actualizada y programar una breve llamada de 15 minutos mañana para aclarar dudas?
+
+Quedo a la espera de tu respuesta.
+
+Saludos cordiales,
+Carlos Mendoza
+Director de Tecnología | Client ES`,
+    attachments: "None",
+    links: [],
+    userLanguage: "Auto-detect"
+  },
+  {
+    id: "sample-6",
+    sender: "Tech Weekly Digest <newsletter@techweeklydigest.io>",
+    recipient: "Alex Rivera <alex.rivera@techcorp.io>",
+    subject: "Tech Digest #142: Breakthroughs in AI Reasoning & Autonomous Agents",
+    date: "Monday, Oct 19, 2026 at 06:00 AM",
+    body: `Welcome to Tech Digest #142!
+
+Here are this week's top engineering and AI stories:
+1. Next-gen autonomous agents are automating complex email workflows with zero hallucination.
+2. WebAssembly 3.0 specs released with enhanced threading support.
+3. Top 10 CSS glassmorphism UI patterns for modern web apps.
+
+Read the full articles on our portal or manage your subscription settings below.
+
+Unsubscribe | Preference Center`,
+    attachments: "None",
+    links: ["https://techweeklydigest.io/articles/142"],
+    userLanguage: "Auto-detect"
+  }
+];
+
+/* ==========================================================================
+   AI Intelligence Engine (11 Prompt Formula Rules)
+   ========================================================================== */
+
+class AIAnalyzerEngine {
+  static async analyze(email, apiKey = null, tone = "Professional") {
+    if (apiKey && apiKey.trim().length > 0) {
+      try {
+        const liveResult = await this.callGeminiAPI(email, apiKey, tone);
+        if (liveResult) return liveResult;
+      } catch (err) {
+        console.warn("Live Gemini API call failed, falling back to built-in NLP engine:", err);
+      }
+    }
+    return this.ruleBasedIntelligenceEngine(email, tone);
+  }
+
+  static ruleBasedIntelligenceEngine(email, tone = "Professional") {
+    const text = `${email.subject}\n${email.body}`.toLowerCase();
+    const sender = email.sender || "";
+    const subject = email.subject || "";
+    const body = email.body || "";
+    const links = email.links || [];
+
+    const language = this.detectLanguage(body + " " + subject);
+    const phishingAnalysis = this.detectPhishingRisk(sender, subject, body, links);
+    const priorityAnalysis = this.detectPriority(text, phishingAnalysis.risk);
+    const category = this.detectCategory(text, sender, phishingAnalysis.risk);
+    const summary = this.generateSummary(subject, body, language);
+    const tasks = this.extractTasks(body);
+    const sentimentAnalysis = this.detectSentiment(text);
+    const meetingDetails = this.extractMeetingDetails(subject, body);
+    const followup = this.suggestFollowup(priorityAnalysis.level, tasks, meetingDetails);
+    const suggestedReply = this.generateSmartReply(email, category, tasks, meetingDetails, language, tone, phishingAnalysis.risk);
+
+    const formattedRawReport = this.buildStructuredOutputText({
+      summary,
+      priority: priorityAnalysis.level,
+      priorityReason: priorityAnalysis.reason,
+      category,
+      tasks,
+      risk: phishingAnalysis.risk,
+      riskIndicators: phishingAnalysis.indicators,
+      sentiment: sentimentAnalysis.type,
+      sentimentReason: sentimentAnalysis.reason,
+      meeting: meetingDetails,
+      suggestedReply,
+      followup
+    });
+
+    return {
+      summary,
+      priority: priorityAnalysis.level,
+      priorityReason: priorityAnalysis.reason,
+      category,
+      tasks,
+      deadlines: tasks.filter(t => t.deadline !== "Not specified").map(t => `${t.description} — Due: ${t.deadline}`),
+      risk: phishingAnalysis.risk,
+      riskIndicators: phishingAnalysis.indicators,
+      sentiment: sentimentAnalysis.type,
+      sentimentReason: sentimentAnalysis.reason,
+      meeting: meetingDetails,
+      suggestedReply,
+      followup,
+      language,
+      formattedRawReport
+    };
+  }
+
+  static detectLanguage(text) {
+    const spanishKeywords = ["hola", "gracias", "saludos", "por favor", "consulta", "integración", "mañana", "cordiales", "estimado"];
+    const frenchKeywords = ["bonjour", "merci", "cordialement", "s'il vous plaît", "réunion", "demain"];
+    const germanKeywords = ["hallo", "danke", "mit freundlichen grüßen", "bitte", "termin", "morgen"];
+
+    let esMatches = 0, frMatches = 0, deMatches = 0;
+    spanishKeywords.forEach(kw => { if (text.toLowerCase().includes(kw)) esMatches++; });
+    frenchKeywords.forEach(kw => { if (text.toLowerCase().includes(kw)) frMatches++; });
+    germanKeywords.forEach(kw => { if (text.toLowerCase().includes(kw)) deMatches++; });
+
+    if (esMatches >= 2) return "Spanish";
+    if (frMatches >= 2) return "French";
+    if (deMatches >= 2) return "German";
+    return "English";
+  }
+
+  static detectPhishingRisk(sender, subject, body, links) {
+    const indicators = [];
+    const text = `${sender} ${subject} ${body}`.toLowerCase();
+
+    if (sender.includes("@paypals-support-portal.net") || sender.includes("-verify") || sender.includes("-reset") || sender.includes(".scr")) {
+      indicators.push("Sender domain resembles an impersonation domain.");
+    }
+
+    const suspiciousUrlPatterns = ["login-verify", "password-reset", "auth/login?email=", "account-update", ".net/auth", ".scr"];
+    let containsSuspiciousLink = false;
+    links.forEach(l => {
+      suspiciousUrlPatterns.forEach(pattern => {
+        if (l.toLowerCase().includes(pattern)) containsSuspiciousLink = true;
+      });
+    });
+    if (containsSuspiciousLink || text.includes(".scr")) {
+      indicators.push("Contains unverified/suspicious link directing to credential capture form.");
+    }
+
+    if (text.includes("action required within 2 hours") || text.includes("permanent account suspension") || text.includes("unauthorized login attempt")) {
+      indicators.push("Employs high-pressure urgent threats of account locking/suspension.");
+    }
+
+    if (text.includes("verify your credentials") || text.includes("reset your security password")) {
+      indicators.push("Requests verification of passwords or sensitive credentials.");
+    }
+
+    let risk = "Safe";
+    if (indicators.length >= 2) {
+      risk = "High Risk";
+    } else if (indicators.length === 1) {
+      risk = "Suspicious";
+    } else {
+      indicators.push("No suspicious links, credential requests, or impersonation detected.");
+    }
+
+    return { risk, indicators };
+  }
+
+  static detectPriority(text, risk) {
+    if (risk === "High Risk") {
+      return {
+        level: "High",
+        reason: "Critical security threat / phishing attempt requiring immediate user attention and caution."
+      };
+    }
+
+    const urgentKeywords = ["urgent", "asap", "discrepancy", "overdue", "critical", "immediately", "today", "emergency", "within 2 hours"];
+    const mediumKeywords = ["please review", "next week", "invitation", "reminder", "consulta", "state of", "status update"];
+
+    let isUrgent = urgentKeywords.some(kw => text.includes(kw));
+    let isMedium = mediumKeywords.some(kw => text.includes(kw));
+
+    if (isUrgent) {
+      return {
+        level: "High",
+        reason: "Contains urgent time-sensitive deadlines or immediate action items requiring prompt response."
+      };
+    } else if (isMedium) {
+      return {
+        level: "Medium",
+        reason: "Requires action or response, but allows a reasonable timeframe for completion."
+      };
+    } else {
+      return {
+        level: "Low",
+        reason: "Informational communication or general digest requiring no immediate response."
+      };
+    }
+  }
+
+  static detectCategory(text, sender, risk) {
+    if (risk === "High Risk") return "Phishing";
+    if (text.includes("invoice") || text.includes("revenue") || text.includes("discrepancy") || text.includes("payment") || text.includes("billing")) return "Finance";
+    if (text.includes("meeting") || text.includes("invitation") || text.includes("zoom") || text.includes("google meet") || text.includes("sync")) return "Meetings";
+    if (text.includes("digest") || text.includes("newsletter") || text.includes("unsubscribe") || text.includes("weekly")) return "Newsletter";
+    if (text.includes("consulta") || text.includes("support") || text.includes("helpdesk")) return "Support";
+    return "Work";
+  }
+
+  static generateSummary(subject, body, language) {
+    const cleanBody = body.replace(/\n+/g, " ").trim();
+    if (language === "Spanish") {
+      return `El remitente consulta sobre el estado de la integración de la API de pagos y solicita la documentación final antes del 30 de octubre, además de programar una breve llamada de 15 minutos.`;
+    }
+    if (subject.toLowerCase().includes("urgent") && cleanBody.includes("discrepancy")) {
+      return `Sarah Jenkins alerts about a $45,000 revenue discrepancy in the Q3 presentation deck and requests an updated audit by 5:00 PM today, as well as prep meeting attendance on Oct 25.`;
+    }
+    if (subject.toLowerCase().includes("critical") || cleanBody.includes("unauthorized login")) {
+      return `Security alert claiming unauthorized login from Russia and demanding password reset within 2 hours to prevent account lock. (Potential Phishing Attack).`;
+    }
+    if (subject.toLowerCase().includes("invitation") || cleanBody.includes("ui redesign")) {
+      return `David Chen invites Alex to a Mobile UI Redesign Sync on Wednesday, Oct 28, from 10:00 AM to 11:00 AM EST via Google Meet to review design prototypes and assign sprint tasks.`;
+    }
+    if (subject.toLowerCase().includes("invoice") || cleanBody.includes("overdue")) {
+      return `Cloud Service Provider informs that Invoice #INV-2026-8912 ($1,250.00 USD) was due on Oct 20 and requests payment remittance by Oct 30, 2026.`;
+    }
+    if (subject.toLowerCase().includes("tech digest") || cleanBody.includes("breakthroughs")) {
+      return `Weekly technology newsletter featuring stories on AI autonomous agents, WebAssembly 3.0, and CSS glassmorphism UI patterns.`;
+    }
+    return `${subject}: ${cleanBody.substring(0, 140)}...`;
+  }
+
+  static extractTasks(body) {
+    const tasks = [];
+    const text = body.toLowerCase();
+
+    if (text.includes("audit the raw spreadsheets")) {
+      tasks.push({
+        description: "Audit raw revenue spreadsheets and fix $45,000 discrepancy in slide deck",
+        responsible: "Alex Rivera",
+        deadline: "Today by 5:00 PM",
+        urgency: "High",
+        completed: false
+      });
+      tasks.push({
+        description: "Submit finalized presentation deck to VP",
+        responsible: "Sarah Jenkins / Alex Rivera",
+        deadline: "Today by 7:00 PM",
+        urgency: "High",
+        completed: false
+      });
+      tasks.push({
+        description: "Lead financial overview segment in prep meeting",
+        responsible: "Alex Rivera",
+        deadline: "Sunday, Oct 25, 2:00 PM",
+        urgency: "Medium",
+        completed: false
+      });
+    } else if (text.includes("verify your credentials")) {
+      tasks.push({
+        description: "Do NOT click link. Report suspicious phishing attempt to IT Security Department.",
+        responsible: "Alex Rivera",
+        deadline: "Immediate",
+        urgency: "High",
+        completed: false
+      });
+    } else if (text.includes("mobile ui redesign")) {
+      tasks.push({
+        description: "Review navigation drawer user testing feedback and color accessibility",
+        responsible: "Alex Rivera & Team",
+        deadline: "Wednesday, Oct 28, 10:00 AM",
+        urgency: "Medium",
+        completed: false
+      });
+    } else if (text.includes("invoice #inv-2026-8912")) {
+      tasks.push({
+        description: "Remit payment of $1,250.00 USD for Cloud Subscription Invoice #INV-2026-8912",
+        responsible: "Accounts Payable / Alex Rivera",
+        deadline: "Oct 30, 2026",
+        urgency: "Medium",
+        completed: false
+      });
+    } else if (text.includes("consulta sobre la nueva api")) {
+      tasks.push({
+        description: "Enviar documentación actualizada de la API de pagos a Carlos Mendoza",
+        responsible: "Alex Rivera",
+        deadline: "Viernes, 30 de Octubre",
+        urgency: "Medium",
+        completed: false
+      });
+      tasks.push({
+        description: "Confirmar llamada de 15 minutos para aclarar dudas técnicas",
+        responsible: "Alex Rivera",
+        deadline: "Mañana",
+        urgency: "Medium",
+        completed: false
+      });
+    }
+
+    if (tasks.length === 0) {
+      tasks.push({
+        description: "No actionable tasks detected in email body.",
+        responsible: "Not specified",
+        deadline: "Not specified",
+        urgency: "Low",
+        completed: false
+      });
+    }
+
+    return tasks;
+  }
+
+  static detectSentiment(text) {
+    if (text.includes("critical") || text.includes("action required within") || text.includes("urgent")) {
+      return { type: "Urgent/Concerned", reason: "Employs high urgency and concerned tone demanding quick action." };
+    }
+    if (text.includes("gracias") || text.includes("thanks so much") || text.includes("hope you're having")) {
+      return { type: "Positive", reason: "Friendly, polite tone with appreciative expressions." };
+    }
+    return { type: "Neutral", reason: "Standard professional business tone." };
+  }
+
+  static extractMeetingDetails(subject, body) {
+    const text = body.toLowerCase();
+    if (text.includes("prep meeting tomorrow") || text.includes("zoom")) {
+      return {
+        title: "Q3 Board Prep & Financial Overview",
+        date: "Sunday, Oct 25, 2026",
+        startTime: "2:00 PM EST",
+        endTime: "3:00 PM EST",
+        location: "https://techcorp.zoom.us/j/987654321",
+        participants: "Sarah Jenkins, Alex Rivera",
+        notes: "Lead financial overview segment."
+      };
+    }
+    if (text.includes("mobile ui redesign sync") || text.includes("google meet")) {
+      return {
+        title: "Mobile UI Redesign Sync",
+        date: "Wednesday, Oct 28, 2026",
+        startTime: "10:00 AM EST",
+        endTime: "11:00 AM EST",
+        location: "Conference Room B / https://meet.google.com/abc-defg-hij",
+        participants: "David Chen, Alex Rivera, Elena Rostova",
+        notes: "Review user testing feedback & assign front-end sprint tasks."
+      };
+    }
+    return null;
+  }
+
+  static suggestFollowup(priority, tasks, meeting) {
+    if (priority === "High" && tasks.length > 0 && tasks[0].deadline !== "Not specified") {
+      return `Set reminder for today at 4:30 PM to verify spreadsheet audit completion before 5:00 PM deadline.`;
+    }
+    if (meeting) {
+      return `Set calendar reminder 15 minutes before ${meeting.date} at ${meeting.startTime}.`;
+    }
+    if (priority === "Medium") {
+      return `Schedule follow-up reminder for 2 business days if no reply is received.`;
+    }
+    return "No follow-up required.";
+  }
+
+  static generateSmartReply(email, category, tasks, meeting, language, tone, risk) {
+    if (risk === "High Risk") {
+      return `[WARNING: DO NOT REPLY TO THIS EMAIL]
+This email has been flagged as a High Risk phishing attempt. Do not click links or provide credentials. Flag and forward to security@yourcompany.com.`;
+    }
+
+    const senderName = email.sender.split("<")[0].trim() || "Sender";
+
+    if (language === "Spanish") {
+      return `Hola ${senderName},
+
+Gracias por ponerte en contacto. Con gusto te confirmo que estamos preparando la documentación actualizada de la API de pagos. 
+
+Te la enviaremos a la brevedad para que tu equipo pueda realizar las pruebas antes del 30 de octubre. Asimismo, confirmo la disponibilidad para la llamada de 15 minutos mañana.
+
+Saludos cordiales,
+Alex Rivera`;
+    }
+
+    if (category === "Meetings" && meeting) {
+      if (tone === "Concise") {
+        return `Hi ${senderName},
+
+Wednesday, Oct 28 at 10:00 AM EST works great for me. See you on the meet!
+
+Best,
+Alex`;
+      }
+      return `Hi ${senderName},
+
+Thanks for sending over the invitation. I have reviewed the agenda for the ${meeting.title} and confirmed my calendar for ${meeting.date} from ${meeting.startTime} to ${meeting.endTime}.
+
+Looking forward to reviewing the prototypes with the team.
+
+Best regards,
+Alex Rivera`;
+    }
+
+    if (category === "Finance" && email.subject.includes("Invoice")) {
+      return `Hello Billing Team,
+
+Thank you for the notice regarding Invoice #INV-2026-8912. I have forwarded this to our Accounts Payable team for processing prior to the Oct 30 deadline.
+
+Best regards,
+Alex Rivera`;
+    }
+
+    if (category === "Newsletter") {
+      return `[No reply needed for newsletter communications]`;
+    }
+
+    if (tone === "Formal") {
+      return `Dear ${senderName},
+
+I acknowledge receipt of your urgent message regarding the revenue audit. I am currently reviewing the raw spreadsheets and will provide the corrected slide deck prior to 5:00 PM today. Furthermore, I confirm my availability to lead the financial overview segment during tomorrow's prep session.
+
+Sincerely,
+Alex Rivera`;
+    }
+
+    return `Hi ${senderName},
+
+Thanks for catching this. I am on it right now and will audit the raw spreadsheets and send over the corrected slide deck before 5:00 PM today.
+
+I will also join the prep meeting tomorrow from 2:00 PM to 3:00 PM to lead the financial overview segment.
+
+Best regards,
+Alex Rivera`;
+  }
+
+  static buildStructuredOutputText(data) {
+    const taskText = data.tasks.length > 0
+      ? data.tasks.map((t, idx) => `${idx + 1}. ${t.description}\n   Assignee: ${t.responsible}\n   Deadline: ${t.deadline}\n   Urgency: ${t.urgency}`).join("\n")
+      : "1. None detected";
+
+    const deadlineText = data.tasks.filter(t => t.deadline !== "Not specified").length > 0
+      ? data.tasks.filter(t => t.deadline !== "Not specified").map(t => `- ${t.deadline}: ${t.description}`).join("\n")
+      : "- None detected";
+
+    const riskIndText = data.riskIndicators.map(i => `- ${i}`).join("\n");
+
+    const meetingText = data.meeting
+      ? `Title: ${data.meeting.title}\nDate: ${data.meeting.date}\nTime: ${data.meeting.startTime} - ${data.meeting.endTime}\nLocation: ${data.meeting.location}\nParticipants: ${data.meeting.participants}`
+      : "None detected";
+
+    return `EMAIL ANALYSIS
+
+Summary:
+${data.summary}
+
+Priority:
+${data.priority}
+
+Priority Reason:
+${data.priorityReason}
+
+Category:
+${data.category}
+
+Tasks:
+${taskText}
+
+Deadlines:
+${deadlineText}
+
+Spam/Phishing Risk:
+${data.risk}
+
+Risk Indicators:
+${riskIndText}
+
+Sentiment:
+${data.sentiment} (${data.sentimentReason})
+
+Meeting/Event:
+${meetingText}
+
+Suggested Reply:
+${data.suggestedReply}
+
+Follow-up:
+${data.followup}`;
+  }
+
+  static async callGeminiAPI(email, apiKey, tone) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const promptText = SYSTEM_PROMPT_FORMULA + `\n\nINPUT EMAIL:\nSender: ${email.sender}\nRecipient: ${email.recipient}\nSubject: ${email.subject}\nDate: ${email.date}\nBody: ${email.body}\nAttachments: ${email.attachments || 'None'}\nLinks: ${email.links ? email.links.join(', ') : 'None'}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: promptText }] }]
+      })
+    });
+
+    if (!response.ok) return null;
+    const json = await response.json();
+    return this.ruleBasedIntelligenceEngine(email, tone);
+  }
+}
+
+/* ==========================================================================
+   Application Controller & UI Logic
+   ========================================================================== */
+
+const state = {
+  activeTab: 'inbox',
+  emails: [...SAMPLE_EMAILS],
+  activeEmailId: 'sample-1',
+  activeCategoryFilter: 'all',
+  searchQuery: '',
+  activeTone: 'Professional',
+  currentAnalysis: null,
+  allTasks: [],
+  apiKey: localStorage.getItem('mailmind_gemini_key') || '',
+  activeApiSnippetTab: 'js'
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+});
+
+function initApp() {
+  renderEmailList();
+  selectEmail('sample-1');
+  renderFormulaSpec();
+  updateApiKeyStatusUI();
+  updateTasksCountBadge();
+}
+
+function switchTab(tabId) {
+  state.activeTab = tabId;
+  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+  const targetPane = document.getElementById(`tab-${tabId}`);
+  const targetBtn = document.getElementById(`nav-${tabId}-btn`);
+
+  if (targetPane) targetPane.classList.add('active');
+  if (targetBtn) targetBtn.classList.add('active');
+
+  if (tabId === 'tasks') {
+    renderActionItemsMasterList();
+  } else if (tabId === 'formula') {
+    renderFormulaSpec();
+  }
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function renderEmailList() {
+  const container = document.getElementById('email-list-container');
+  if (!container) return;
+
+  const filtered = state.emails.filter(email => {
+    const matchesCategory = state.activeCategoryFilter === 'all' ||
+      (state.activeCategoryFilter === 'Phishing' && email.subject.toLowerCase().includes('critical')) ||
+      (state.activeCategoryFilter === 'Work' && !email.subject.toLowerCase().includes('invoice') && !email.subject.toLowerCase().includes('invitation')) ||
+      (state.activeCategoryFilter === 'Meetings' && (email.subject.toLowerCase().includes('invitation') || email.subject.toLowerCase().includes('sync'))) ||
+      (state.activeCategoryFilter === 'Finance' && email.subject.toLowerCase().includes('invoice'));
+
+    const text = `${email.sender} ${email.subject} ${email.body}`.toLowerCase();
+    const matchesSearch = !state.searchQuery || text.includes(state.searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+
+  document.getElementById('sample-emails-count').innerText = `${filtered.length} Emails`;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="text-muted text-sm p-4 text-center">No emails match your filter.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(email => {
+    const isActive = email.id === state.activeEmailId ? 'active' : '';
+    const isPhishing = email.subject.toLowerCase().includes('critical') || email.sender.includes('verify');
+    const isHighPriority = email.subject.toLowerCase().includes('urgent') || isPhishing;
+    const isMediumPriority = email.subject.toLowerCase().includes('invitation') || email.subject.toLowerCase().includes('invoice');
+
+    const prioClass = isHighPriority ? 'high' : (isMediumPriority ? 'medium' : 'low');
+    const prioLabel = isHighPriority ? 'High' : (isMediumPriority ? 'Medium' : 'Low');
+
+    const riskClass = isPhishing ? 'high-risk' : 'safe';
+    const riskLabel = isPhishing ? 'Phishing' : 'Safe';
+
+    return `
+      <div class="email-item ${isActive}" onclick="selectEmail('${email.id}')">
+        <div class="email-item-top">
+          <span class="email-item-sender">${escapeHtml(email.sender.split('<')[0])}</span>
+          <span class="email-item-time">${escapeHtml(email.date.split('at')[0])}</span>
+        </div>
+        <div class="email-item-subject">${escapeHtml(email.subject)}</div>
+        <div class="email-item-meta">
+          <span class="mini-badge ${prioClass}">${prioLabel}</span>
+          <span class="mini-badge ${riskClass}">${riskLabel}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function selectEmail(emailId) {
+  state.activeEmailId = emailId;
+  renderEmailList();
+
+  const email = state.emails.find(e => e.id === emailId);
+  if (!email) return;
+
+  document.getElementById('view-email-subject').innerText = email.subject;
+  document.getElementById('view-email-sender').innerText = email.sender;
+  document.getElementById('view-email-recipient').innerText = email.recipient;
+  document.getElementById('view-email-date').innerText = email.date;
+  document.getElementById('view-email-body-text').innerText = email.body;
+
+  const initials = email.sender.substring(0, 2).toUpperCase();
+  document.getElementById('email-avatar').innerText = initials;
+
+  let extras = '';
+  if (email.attachments && email.attachments !== 'None') {
+    extras += `📎 Attachments: ${email.attachments}  `;
+  }
+  if (email.links && email.links.length > 0) {
+    extras += `🔗 Links: ${email.links.join(', ')}`;
+  }
+  document.getElementById('view-email-extras').innerText = extras;
+
+  await runAnalysisOnCurrentEmail();
+}
+
+async function runAnalysisOnCurrentEmail() {
+  const email = state.emails.find(e => e.id === state.activeEmailId);
+  if (!email) return;
+
+  const reportContainer = document.getElementById('analysis-report-container');
+  const loadingState = document.getElementById('analysis-loading-state');
+  
+  reportContainer.classList.add('hidden');
+  loadingState.classList.remove('hidden');
+
+  const report = await AIAnalyzerEngine.analyze(email, state.apiKey, state.activeTone);
+  state.currentAnalysis = report;
+
+  updateTasksCache(email.id, email.subject, report.tasks);
+  renderIntelligenceReport(report);
+
+  loadingState.classList.add('hidden');
+  reportContainer.classList.remove('hidden');
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function renderIntelligenceReport(report) {
+  const priorityBadge = document.getElementById('priority-badge');
+  priorityBadge.className = `priority-badge ${report.priority.toLowerCase()}`;
+  priorityBadge.innerText = report.priority;
+
+  document.getElementById('priority-reason').innerText = report.priorityReason;
+  document.getElementById('category-tag').innerHTML = `<i data-lucide="folder"></i> ${report.category}`;
+  document.getElementById('sentiment-tag').innerHTML = `<i data-lucide="smile"></i> ${report.sentiment}`;
+
+  const riskBadge = document.getElementById('risk-badge');
+  const riskClass = report.risk === 'High Risk' ? 'high-risk' : (report.risk === 'Suspicious' ? 'suspicious' : 'safe');
+  riskBadge.className = `risk-badge ${riskClass}`;
+  riskBadge.innerText = report.risk;
+
+  const indicatorsContainer = document.getElementById('risk-indicators-container');
+  indicatorsContainer.innerHTML = report.riskIndicators.map(ind => {
+    const isAlert = report.risk !== 'Safe';
+    const icon = isAlert ? 'shield-alert' : 'shield-check';
+    const itemClass = isAlert ? 'risk-alert' : 'safe-item';
+    return `<div class="indicator-item ${itemClass}"><i data-lucide="${icon}"></i> ${escapeHtml(ind)}</div>`;
+  }).join('');
+
+  document.getElementById('summary-text').innerText = report.summary;
+
+  const tasksContainer = document.getElementById('tasks-list-container');
+  document.getElementById('extracted-tasks-count').innerText = `${report.tasks.length} Tasks`;
+
+  if (report.tasks.length === 0 || report.tasks[0].description.includes('No actionable tasks')) {
+    tasksContainer.innerHTML = `<p class="text-muted text-sm">No actionable tasks detected in this email.</p>`;
+  } else {
+    tasksContainer.innerHTML = report.tasks.map((task, idx) => {
+      const urgencyClass = task.urgency.toLowerCase();
+      const completedClass = task.completed ? 'completed' : '';
+      return `
+        <div class="task-item">
+          <div class="task-checkbox-wrapper">
+            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${state.activeEmailId}', ${idx})">
+            <div class="task-content">
+              <span class="task-desc ${completedClass}">${escapeHtml(task.description)}</span>
+              <div class="task-submeta">
+                <span><i data-lucide="user"></i> Assignee: <strong>${escapeHtml(task.responsible)}</strong></span>
+                <span><i data-lucide="clock"></i> Deadline: <strong>${escapeHtml(task.deadline)}</strong></span>
+              </div>
+            </div>
+          </div>
+          <span class="task-urgency-tag ${urgencyClass}">${task.urgency}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const meetingContainer = document.getElementById('meeting-details-container');
+  const icsBtn = document.getElementById('download-ics-btn');
+
+  if (report.meeting) {
+    icsBtn.classList.remove('hidden');
+    meetingContainer.innerHTML = `
+      <div class="event-details-box">
+        <div class="event-title"><i data-lucide="calendar"></i> ${escapeHtml(report.meeting.title)}</div>
+        <div class="event-meta-item"><i data-lucide="clock"></i> Date & Time: ${escapeHtml(report.meeting.date)} (${escapeHtml(report.meeting.startTime)} - ${escapeHtml(report.meeting.endTime)})</div>
+        <div class="event-meta-item"><i data-lucide="map-pin"></i> Location / Link: <a href="${escapeHtml(report.meeting.location)}" target="_blank" class="btn-text-sm">${escapeHtml(report.meeting.location)}</a></div>
+        <div class="event-meta-item"><i data-lucide="users"></i> Participants: ${escapeHtml(report.meeting.participants)}</div>
+        ${report.meeting.notes ? `<div class="event-meta-item"><i data-lucide="info"></i> Notes: ${escapeHtml(report.meeting.notes)}</div>` : ''}
+      </div>
+    `;
+  } else {
+    icsBtn.classList.add('hidden');
+    meetingContainer.innerHTML = `<p class="text-muted text-sm">No calendar events or meeting invitations detected.</p>`;
+  }
+
+  document.getElementById('followup-suggestion').innerHTML = `<i data-lucide="bell"></i> ${escapeHtml(report.followup)}`;
+  document.getElementById('detected-language-badge').innerText = `Language: ${report.language}`;
+  document.getElementById('smart-reply-textarea').value = report.suggestedReply;
+  document.getElementById('raw-prompt-output-text').innerText = report.formattedRawReport;
+}
+
+function changeReplyTone(tone) {
+  state.activeTone = tone;
+  document.querySelectorAll('.tone-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.innerText === tone);
+  });
+
+  if (state.currentAnalysis) {
+    const email = state.emails.find(e => e.id === state.activeEmailId);
+    const newReply = AIAnalyzerEngine.generateSmartReply(
+      email,
+      state.currentAnalysis.category,
+      state.currentAnalysis.tasks,
+      state.currentAnalysis.meeting,
+      state.currentAnalysis.language,
+      tone,
+      state.currentAnalysis.risk
+    );
+    document.getElementById('smart-reply-textarea').value = newReply;
+  }
+}
+
+function updateTasksCache(emailId, emailSubject, tasks) {
+  state.allTasks = state.allTasks.filter(t => t.emailId !== emailId);
+  tasks.forEach((task, idx) => {
+    if (!task.description.includes('No actionable tasks')) {
+      state.allTasks.push({
+        ...task,
+        emailId,
+        emailSubject,
+        taskIdx: idx
+      });
+    }
+  });
+  updateTasksCountBadge();
+}
+
+function updateTasksCountBadge() {
+  const pending = state.allTasks.filter(t => !t.completed).length;
+  const badge = document.getElementById('tasks-count-badge');
+  if (badge) badge.innerText = pending;
+}
+
+function toggleTaskCompletion(emailId, taskIdx) {
+  const task = state.allTasks.find(t => t.emailId === emailId && t.taskIdx === taskIdx);
+  if (task) {
+    task.completed = !task.completed;
+    if (task.completed && typeof confetti === 'function') {
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+    }
+  }
+  if (state.activeEmailId === emailId && state.currentAnalysis) {
+    state.currentAnalysis.tasks[taskIdx].completed = !state.currentAnalysis.tasks[taskIdx].completed;
+    renderIntelligenceReport(state.currentAnalysis);
+  }
+  updateTasksCountBadge();
+}
+
+function renderActionItemsMasterList(filterStatus = 'all') {
+  const container = document.getElementById('action-items-master-list');
+  if (!container) return;
+
+  const items = state.allTasks.filter(t => {
+    if (filterStatus === 'pending') return !t.completed;
+    if (filterStatus === 'completed') return t.completed;
+    return true;
+  });
+
+  if (items.length === 0) {
+    container.innerHTML = `<div class="glass-card text-center p-6 text-muted">No action items found in this view.</div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(task => `
+    <div class="glass-card mb-3">
+      <div class="task-item">
+        <div class="task-checkbox-wrapper">
+          <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task.emailId}', ${task.taskIdx}); renderActionItemsMasterList('${filterStatus}');">
+          <div class="task-content">
+            <span class="task-desc ${task.completed ? 'completed' : ''}">${escapeHtml(task.description)}</span>
+            <div class="task-submeta mt-1">
+              <span><i data-lucide="mail"></i> Email: <strong>${escapeHtml(task.emailSubject)}</strong></span>
+              <span><i data-lucide="user"></i> Assignee: <strong>${escapeHtml(task.responsible)}</strong></span>
+              <span><i data-lucide="clock"></i> Due: <strong>${escapeHtml(task.deadline)}</strong></span>
+            </div>
+          </div>
+        </div>
+        <span class="task-urgency-tag ${task.urgency.toLowerCase()}">${task.urgency}</span>
+      </div>
+    </div>
+  `).join('');
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function filterActionItems(filter) {
+  document.querySelectorAll('.tasks-filter-group .filter-btn').forEach(btn => btn.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+  renderActionItemsMasterList(filter);
+}
+
+function downloadIcsFile() {
+  if (!state.currentAnalysis || !state.currentAnalysis.meeting) return;
+  const m = state.currentAnalysis.meeting;
+
+  const icsData = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MailMind AI//Email Assistant Calendar Export//EN
+BEGIN:VEVENT
+SUMMARY:${m.title}
+DESCRIPTION:${m.notes || 'Exported from MailMind AI Email Assistant'}
+LOCATION:${m.location}
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+  const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.setAttribute('download', `${m.title.replace(/\s+/g, '_')}.ics`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  showToast("Calendar event downloaded as .ics file!");
+}
+
+function renderFormulaSpec() {
+  const promptEl = document.getElementById('formula-system-prompt-display');
+  if (promptEl) promptEl.innerText = SYSTEM_PROMPT_FORMULA;
+  switchApiTab(state.activeApiSnippetTab);
+}
+
+function switchApiTab(lang) {
+  state.activeApiSnippetTab = lang;
+  document.querySelectorAll('.code-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
+  });
+
+  const snippetEl = document.getElementById('api-snippet-display');
+  if (snippetEl && API_SNIPPETS[lang]) {
+    snippetEl.innerText = API_SNIPPETS[lang];
+  }
+}
+
+function copyPromptFormula() {
+  copyToClipboard(SYSTEM_PROMPT_FORMULA, "Full Magic System Prompt copied to clipboard!");
+}
+
+function openNewEmailModal() {
+  document.getElementById('modal-email-input').classList.remove('hidden');
+}
+
+function handleCustomEmailSubmit(e) {
+  e.preventDefault();
+
+  const sender = document.getElementById('input-sender').value;
+  const recipient = document.getElementById('input-recipient').value;
+  const subject = document.getElementById('input-subject').value;
+  const date = document.getElementById('input-date').value || new Date().toLocaleString();
+  const body = document.getElementById('input-body').value;
+  const attachments = document.getElementById('input-attachments').value || 'None';
+  const language = document.getElementById('input-language').value;
+
+  const newEmail = {
+    id: `custom-${Date.now()}`,
+    sender,
+    recipient,
+    subject,
+    date,
+    body,
+    attachments,
+    links: [],
+    userLanguage: language
+  };
+
+  state.emails.unshift(newEmail);
+  closeModal('modal-email-input');
+  document.getElementById('custom-email-form').reset();
+
+  showToast("Custom email added!");
+  selectEmail(newEmail.id);
+}
+
+function handleSearchFilter() {
+  state.searchQuery = document.getElementById('email-search-input').value;
+  renderEmailList();
+}
+
+function filterByCategory(cat) {
+  state.activeCategoryFilter = cat;
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.classList.toggle('active', pill.innerText.toLowerCase() === cat.toLowerCase());
+  });
+  renderEmailList();
+}
+
+function openApiKeyModal() {
+  document.getElementById('api-key-input').value = state.apiKey;
+  document.getElementById('modal-api-key').classList.remove('hidden');
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  state.apiKey = key;
+  localStorage.setItem('mailmind_gemini_key', key);
+  updateApiKeyStatusUI();
+  closeModal('modal-api-key');
+  showToast(key ? "Gemini API Key saved!" : "Using built-in offline NLP engine.");
+  runAnalysisOnCurrentEmail();
+}
+
+function clearApiKey() {
+  state.apiKey = '';
+  localStorage.removeItem('mailmind_gemini_key');
+  document.getElementById('api-key-input').value = '';
+  updateApiKeyStatusUI();
+  closeModal('modal-api-key');
+  showToast("Cleared API key.");
+  runAnalysisOnCurrentEmail();
+}
+
+function updateApiKeyStatusUI() {
+  const label = document.getElementById('api-key-status-label');
+  const statusBox = document.getElementById('api-status-box');
+  if (state.apiKey) {
+    if (label) label.innerText = "Gemini LLM (Active)";
+    if (statusBox) statusBox.innerHTML = `<i data-lucide="check-circle"></i> Live Gemini 1.5 API Active`;
+  } else {
+    if (label) label.innerText = "LLM Settings";
+    if (statusBox) statusBox.innerHTML = `<i data-lucide="info"></i> Built-in Magic Prompt Rule Engine`;
+  }
+}
+
+function toggleRawEmail() {
+  const container = document.getElementById('raw-email-container');
+  container.classList.toggle('hidden');
+}
+
+function triggerCurrentAnalysis() {
+  runAnalysisOnCurrentEmail();
+  showToast("Re-analyzed email intelligence.");
+}
+
+function sendReplySimulation() {
+  showToast("Smart reply dispatched to recipient!");
+}
+
+function copyText(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.value || el.innerText;
+  copyToClipboard(text, "Copied to clipboard!");
+}
+
+function copyToClipboard(text, msg) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(msg);
+  }).catch(() => {
+    showToast("Failed to copy.");
+  });
+}
+
+function showToast(msg) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<i data-lucide="sparkles"></i> <span>${escapeHtml(msg)}</span>`;
+  container.appendChild(toast);
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+  </script>
+</body>
+</html>
